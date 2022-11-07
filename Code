@@ -1,0 +1,103 @@
+#include<iostream>
+using namespace std;
+class bst{
+struct node{
+    int data;
+    node*left;
+    node*right;
+};
+node*root;
+node*insert(int x,node*t){
+if(!t){
+    t=new node;
+    t->data=x;
+    t->left=t->right=NULL;
+}else if(x<t->data){
+    t->left=insert(x,t->left);
+}else if(x>t->data){
+    t->right=insert(x,t->right);
+}
+return t;
+}
+
+void display(node*t){
+    if(t){
+display(t->left);
+cout<<t->data<<" ";
+display(t->right);
+    }
+}
+node*find_inorder_suc(node*root){
+node*t=root->left;
+while(t->right){
+    t=t->right;
+}
+return t;
+}
+node*find_inorder_pre(node*root){
+node*t=root->right;
+while(t->left){
+    t=t->left;
+}
+return t;
+}
+node* remove(int x,node*root){
+if(!root){
+    return NULL;
+}
+if(x<root->data){
+    root->left=remove(x,root->left);
+}else if(x>root->data){
+    root->right=remove(x,root->right);
+}else{
+if(!root->left && !root->right){
+    return NULL;
+}else if(!root->left)
+{
+node*k=root;
+root=root->right;
+delete k;
+}else if(!root->right){
+node*k=root;
+root=root->left;
+delete k;
+}else{
+// node*inpre=find_inorder_suc(root);
+// root->data=inpre->data;
+// root->left=remove(root->data,root->left);
+node*inpre=find_inorder_pre(root);
+root->data=inpre->data;
+root->right=remove(root->data,root->right);
+}
+}
+return root;
+}
+public:
+bst(){
+    root=NULL;
+}
+
+void insert_(int val){
+root=insert(val,root);
+}
+void display_(){
+    display(root);
+}
+void remove_(int x){
+    root=remove(x,root);
+}
+};
+int main(){
+bst t;
+t.insert_(14);
+t.insert_(13);
+t.insert_(11);
+t.insert_(12);
+t.insert_(16);
+t.insert_(17);
+t.insert_(15);
+t.remove_(11);
+t.display_();
+
+    return 0;
+}
